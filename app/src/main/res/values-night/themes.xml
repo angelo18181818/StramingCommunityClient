@@ -1,0 +1,9 @@
+<resources>
+    <style name="Base.Theme.StramingCommunityClient" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:colorAccent">@android:color/white</item>
+    </style>
+</resources>
