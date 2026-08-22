@@ -1,113 +1,113 @@
-# StramingCommunityClient — GeckoView single-site viewer per Android TV
+# StramingCommunityClient — GeckoView single-site viewer for Android TV
 
 <p align="center">
   <img src="app/src/main/res/drawable-nodpi/launcher_icon.png" width="180" alt="StramingCommunityClient launcher icon">
 </p>
 
-StramingCommunityClient è un esperimento Android TV minimale scritto in Kotlin. Incorpora GeckoView nell'APK e apre automaticamente un singolo URL a schermo intero, senza dipendere da Android System WebView o dal browser preinstallato sul dispositivo.
+StramingCommunityClient is a minimal Android TV experiment written in Kotlin. It embeds GeckoView directly in the APK and automatically opens a single configured URL in a fullscreen view, without relying on Android System WebView or the browser bundled with the device firmware.
 
-Non è un browser completo: è un single-site viewer pensato principalmente per verificare GeckoView su hardware Android TV vecchio o limitato.
+This is not a complete web browser. It is a single-site viewer primarily intended to test modern GeckoView builds on old or resource-constrained Android TV hardware.
 
-## Stato attuale
+## Current status
 
 - GeckoView `153.0.20260810162159`.
-- Kotlin e Android Views/XML; nessun Jetpack Compose.
-- `minSdk 29`, `targetSdk 37`, `compileSdk 37`.
+- Kotlin with Android Views/XML; no Jetpack Compose.
+- `minSdk 29`, `targetSdk 37`, and `compileSdk 37`.
 - Java source/target compatibility 17.
-- Gradle 9.5.0 e Android Gradle Plugin 9.3.1.
-- Orientamento landscape.
-- Un'unica `MainActivity` e un unico `GeckoView`.
-- URL salvato localmente tramite `SharedPreferences`.
-- Nessun WebView di sistema utilizzato.
+- Gradle 9.5.0 and Android Gradle Plugin 9.3.1.
+- Landscape orientation.
+- One `MainActivity` and one `GeckoView`.
+- The configured URL is stored locally with `SharedPreferences`.
+- Android System WebView is not used.
 
-## Hardware e ABI verificati
+## Tested hardware and ABIs
 
-| Flavor | ABI | Ambiente | Stato |
+| Flavor | ABI | Environment | Status |
 |---|---|---|---|
-| `hboxArmv7` | `armeabi-v7a` | H_BOX, Android 10/API 29, dispositivo low-RAM | Verificato |
-| `emulatorX86_64` | `x86_64` | Emulatore Android TV API 36 | Verificato |
-| `emulatorX86` | `x86` | Vecchio AVD API 29 | Flavor storico; GeckoView 153 non pubblica x86 |
+| `hboxArmv7` | `armeabi-v7a` | H_BOX, Android 10/API 29, low-RAM device | Tested |
+| `emulatorX86_64` | `x86_64` | Android TV API 36 emulator | Tested |
+| `emulatorX86` | `x86` | Legacy API 29 AVD | Historical flavor; GeckoView 153 does not publish x86 builds |
 
-Gli APK sono ABI-specifici. Non viene prodotto un APK universale.
+The generated APKs are ABI-specific. The project does not produce a universal APK.
 
-## Configurazione dell'URL dalla TV
+## Changing the URL from the TV
 
-L'app carica l'URL salvato; se non esiste ancora una configurazione usa il valore `DEFAULT_URL` presente in `MainActivity.kt`.
+The application loads the stored URL. If no URL has been saved yet, it uses the `DEFAULT_URL` value declared in `MainActivity.kt`.
 
-Per cambiarlo:
+To change it:
 
-1. premere contemporaneamente `DPAD_UP` e `DPAD_DOWN`;
-2. sui telecomandi che non possono premere due direzioni insieme, premere rapidamente `SU` e `GIÙ` entro circa 350 ms;
-3. modificare l'indirizzo nel campo centrale;
-4. premere `OK` o `Invio` per salvare e caricare il nuovo sito;
-5. premere `BACK` per annullare.
+1. press `DPAD_UP` and `DPAD_DOWN` at the same time;
+2. on remotes that cannot physically press both directions together, press `UP` and `DOWN` rapidly within approximately 350 ms;
+3. edit the address in the centered text field;
+4. press `OK` or `Enter` to save and load the new site;
+5. press `BACK` to cancel.
 
-Se viene inserito soltanto un dominio, l'app aggiunge automaticamente `https://`. Sono accettati esclusivamente URL HTTP e HTTPS validi.
+If only a domain name is entered, the application automatically prepends `https://`. Only valid HTTP and HTTPS URLs are accepted.
 
-## Build
+## Building
 
-Requisiti:
+Requirements:
 
 - JDK 17;
-- Android SDK con API 37;
-- accesso al repository Maven ufficiale Mozilla già configurato in `settings.gradle.kts`.
+- Android SDK with API 37;
+- access to the official Mozilla Maven repository, already configured in `settings.gradle.kts`.
 
-Build H_BOX ARMv7 su Windows:
+Build the ARMv7 APK for H_BOX on Windows:
 
 ```cmd
 gradlew.bat :app:assembleHboxArmv7Debug
 ```
 
-Build emulatore x86_64:
+Build the x86_64 emulator APK:
 
 ```cmd
 gradlew.bat :app:assembleEmulatorX86_64Debug
 ```
 
-Non utilizzare il flavor `emulatorX86` con GeckoView 153. Per il vecchio x86 era stata verificata GeckoView `144.0.20251027123126`.
+Do not use the `emulatorX86` flavor with GeckoView 153. GeckoView `144.0.20251027123126` was the last version verified with the legacy x86 AVD used by this project.
 
-Installazione tramite ADB:
+Install an APK through ADB:
 
 ```cmd
-adb -s <seriale> install -r <percorso-apk>
+adb -s <device-serial> install -r <apk-path>
 ```
 
-Usare sempre `-s <seriale>` quando sono connessi più dispositivi.
+Always specify `-s <device-serial>` when multiple devices are connected.
 
-## Punti di forza
+## Strengths
 
-- Motore Gecko moderno incorporato direttamente nell'APK.
-- Indipendenza dal WebView/browser obsoleto del firmware.
-- Compatibilità verificata con Android 10/API 29 e ARMv7.
-- Supporto x86_64 per un emulatore Android TV moderno.
-- Interfaccia estremamente minimale, senza toolbar o componenti browser visibili.
-- URL modificabile dalla TV e persistente tra gli avvii.
-- Icona e banner TV dedicati.
-- Nessuna iniezione JavaScript, WebExtension o navigazione spaziale attiva.
-- Nessun servizio in background aggiunto dall'app.
+- A modern Gecko engine is embedded directly in the APK.
+- It does not depend on an outdated firmware WebView or browser.
+- Android 10/API 29 and ARMv7 compatibility has been tested on real hardware.
+- An x86_64 flavor is available for a modern Android TV emulator.
+- Extremely minimal visible UI, with no browser toolbar.
+- The target URL can be changed from the TV and persists across launches.
+- Dedicated Android TV icon and banner.
+- No active JavaScript injection, WebExtension, or custom spatial-navigation layer.
+- The application adds no background service.
 
-## Limitazioni e debolezze note
+## Known limitations and weaknesses
 
-- **Non è un browser completo.** Non dispone di barra URL permanente, tab, ricerca, cronologia visibile, preferiti, download, menu o impostazioni.
-- **Nessuna navigazione Back/Forward del browser.** Non sono implementati comandi `goBack()` o `goForward()`.
-- **Navigazione TV non implementata.** Il sito non viene adattato alla navigazione spaziale con D-pad.
-- **Serve spesso un mouse o air-mouse.** Su H_BOX molti elementi del sito richiedono un mouse USB/Bluetooth, un telecomando air-mouse o un altro sistema di puntamento.
-- **Il D-pad funziona soltanto dove la pagina offre elementi HTML naturalmente focalizzabili.**
-- **Possibile lag su hardware low-RAM.** La H_BOX testata dispone di circa 1,5 GB di RAM ed è identificata da Android come dispositivo `low_ram=true`.
-- **Le pagine web pesanti possono rallentare tutta la UI.** Script, pubblicità, tracker, iframe e processi Content multipli possono produrre jank, anche se la decodifica di un MP4 diretto è fluida.
-- **Audio e video possono presentare scatti su siti pesanti.** Durante i test il problema ha coinvolto anche animazioni e scrolling della pagina, non soltanto il decoder video.
-- **APK grande.** L'APK ARMv7 debug con GeckoView incorporato è di circa 171 MB.
-- **Nessun content blocker o ad blocker.** Tracker, pubblicità e iframe vengono caricati normalmente.
-- **Nessun popup blocker.** La baseline attuale non filtra finestre, redirect o richieste esterne della pagina.
-- **Nessun custom player.** Riproduzione, controlli, fullscreen e compatibilità dipendono dal sito e da GeckoView.
-- **Fullscreen HTML5 non personalizzato.** Non esiste ancora un gestore Android dedicato per tutte le richieste fullscreen dei siti.
-- **Nessun ripristino avanzato della sessione.** L'app conserva soltanto l'URL configurato, non tab o cronologia.
-- **Dominio predefinito fragile.** Se il sito cambia dominio o struttura, `DEFAULT_URL` deve essere aggiornato manualmente o tramite il campo nascosto.
-- **Nessun hardening da produzione.** Mancano gestione errori completa, crash recovery, CI, test specifici TV, firma release e distribuzione Play Store.
-- **Compatibilità limitata alle ABI dichiarate.** GeckoView 153 non supporta il vecchio x86 usato dal primo AVD.
-- **Prestazioni influenzate dal sistema.** Device Mirroring, scansioni ADB frequenti, poca memoria libera e processi in background possono aumentare il lag.
+- **This is not a complete browser.** There is no permanent URL bar, tabs, search, visible history, bookmarks, download manager, menu, or settings screen.
+- **There is no browser Back/Forward navigation.** The application does not implement `goBack()` or `goForward()`.
+- **TV spatial navigation is not implemented.** The page DOM is not adapted for directional D-pad navigation.
+- **A mouse or air-mouse is often required.** On H_BOX, many page elements require a USB/Bluetooth mouse, an air-mouse remote, or another pointing device.
+- **The D-pad only works on elements that the page exposes as naturally focusable HTML controls.**
+- **Performance can be poor on low-RAM hardware.** The tested H_BOX has approximately 1.5 GB of RAM and Android reports `low_ram=true`.
+- **Heavy web pages can slow down the entire UI.** Scripts, advertisements, trackers, iframes, and multiple Gecko Content processes may produce visible jank even when direct MP4 decoding is smooth.
+- **Audio and video may stutter on complex sites.** During testing, the same timing issue also affected page animations and scrolling, not only video decoding.
+- **The APK is large.** The ARMv7 debug APK with embedded GeckoView is approximately 171 MB.
+- **There is no content blocker or ad blocker.** Advertisements, trackers, and third-party frames load normally.
+- **There is no popup blocker.** The current baseline does not filter new windows, redirects, or external navigation requests.
+- **There is no custom media player.** Playback, controls, fullscreen behavior, and compatibility depend on the website and GeckoView.
+- **HTML5 fullscreen is not customized.** The application does not yet provide a dedicated Android handler for every website fullscreen request.
+- **There is no advanced session recovery.** Only the configured URL is retained; tabs and navigation history are not restored.
+- **The default domain is fragile.** If the website changes its domain or structure, `DEFAULT_URL` must be updated in the source or through the hidden URL field.
+- **The application is not production-hardened.** Complete error handling, crash recovery, CI, TV-specific automated tests, release signing, and Play Store distribution are not implemented.
+- **ABI compatibility is intentionally limited.** GeckoView 153 does not support the legacy x86 architecture used by the first AVD.
+- **System conditions affect performance.** Device mirroring, frequent ADB monitoring, low free storage, thermal throttling, and background processes can increase jank.
 
-## Struttura essenziale
+## Essential project structure
 
 ```text
 app/src/main/java/com/angel/stramingcommunityclient/MainActivity.kt
@@ -117,12 +117,12 @@ app/src/main/res/drawable-nodpi/launcher_icon.png
 app/src/main/res/drawable-nodpi/launcher_banner.png
 ```
 
-## Note su privacy e sicurezza
+## Privacy and security notes
 
-L'app salva localmente soltanto l'URL configurato. Cookie, storage web e traffico di rete sono gestiti da GeckoView e dai siti visitati. La baseline non blocca tracker, popup o redirect: non deve essere considerata un browser rinforzato o uno strumento di navigazione sicura general-purpose.
+The application stores only the configured URL in its own local preferences. Cookies, website storage, and network traffic are handled by GeckoView and by the visited websites. The current baseline does not block trackers, popups, or redirects and must not be treated as a hardened or general-purpose secure browser.
 
-Utilizzare il progetto esclusivamente con siti e contenuti per i quali si dispone dell'autorizzazione necessaria.
+Use this project only with websites and content for which you have the necessary authorization.
 
-## Licenza
+## License
 
-Questo snapshot non include ancora una licenza del progetto. Prima di accettare contributi o riutilizzi pubblici, aggiungere una licenza appropriata. GeckoView e le altre dipendenze mantengono le rispettive licenze originali.
+This snapshot does not currently include a project license. Add an appropriate license before accepting contributions or granting reuse rights. GeckoView and all other dependencies retain their respective original licenses.
